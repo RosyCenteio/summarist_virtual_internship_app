@@ -2,6 +2,7 @@
 import '../style.css'
 import { useState } from 'react';
 import Login from './auth/login';
+import Link from 'next/link';
 
 export default function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,6 +22,10 @@ export default function Navbar() {
           <li className="nav__list nav__list--mobile">Contact</li>
           <li className="nav__list nav__list--mobile">Help</li>
         </ul>
+
+        <Link href="/for-you">
+          <button className="nav__btn">For You</button>
+        </Link>
       </div>
     </nav>
   )

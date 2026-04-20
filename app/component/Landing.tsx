@@ -1,7 +1,12 @@
+'use client'
 import React from 'react'
 import Image from 'next/image'
+import { useState } from 'react';
+import Login from './auth/login';
 
 export default function Landing() {
+      const [isModalOpen, setIsModalOpen] = useState(false);
+    
   return (
     <section id="landing">
         <div className="container">
@@ -19,7 +24,11 @@ export default function Landing() {
                     <br className="remove--tablet" />
                     and even people who don’t like to read.
                 </div>
-                <button className="btn home__cta--btn">Login</button>
+                <button className="btn home__cta--btn" onClick={() => setIsModalOpen(true)}>Login</button>
+                <Login 
+                    isOpen={isModalOpen} 
+                    onClose={() => setIsModalOpen(false)} 
+                    />
                 </div>
                 <figure className="landing__image--mask">
                 <img src="/landing.png" alt="landing" />

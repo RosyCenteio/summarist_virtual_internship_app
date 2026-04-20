@@ -1,9 +1,9 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import { signInWithEmailAndPassword,createUserWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 
 export default function Login({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
   const [email, setEmail] = useState('');
@@ -11,6 +11,7 @@ export default function Login({ isOpen, onClose }: { isOpen: boolean, onClose: (
   const [error, setError] = useState('');
   const[haveAccount, setHaveAccount] = useState(true);
   const[forgotPassword, setForgotPassword] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if(!isOpen) {
@@ -28,8 +29,8 @@ export default function Login({ isOpen, onClose }: { isOpen: boolean, onClose: (
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      alert("Logged in!");
       onClose();
+      router.push('/for-you');
     } catch (error: any) {
       alert(error.message);
       setError(error.message);
@@ -40,9 +41,8 @@ export default function Login({ isOpen, onClose }: { isOpen: boolean, onClose: (
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-   
-      console.log("User Info:", result.user);
       onClose();
+      router.push('/for-you');
     } catch (error: any) {
       console.error("Google Login Error:", error.message);
     }
@@ -57,6 +57,7 @@ export default function Login({ isOpen, onClose }: { isOpen: boolean, onClose: (
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         console.log("Account created:", userCredential.user);
         onClose();
+        router.push('/for-you');
     } catch (error: any) {
         alert(error.message);
         setError(error.message);
