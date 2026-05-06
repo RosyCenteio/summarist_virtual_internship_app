@@ -9,5 +9,11 @@ export interface Book {
   averageRating: number;
   totalRating: number;
   keyIdeas: number
+  tags:string;
+  summary: string;
+  bookDescription: string;
+  authorDescription: string;
+  audioLink: string;
+  subscriptionRequired: boolean;
 }
 
