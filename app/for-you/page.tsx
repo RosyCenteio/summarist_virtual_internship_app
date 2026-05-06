@@ -8,7 +8,8 @@ import NavBar from './NavBar';
 
 import {
   faStar,
-  faClock
+  faClock,
+  faBars
 } from "@fortawesome/free-solid-svg-icons";
 import Link from 'next/link';
 import {Book} from '../component/ui/Book'
@@ -19,7 +20,17 @@ export default function ForYou() {
     const [suggestedBooks, setSuggestedBooks] = useState<Book[]>([]);
     const[selectedBook, setSelectedBook] = useState<Book | null>(null);
     const[loading, setLoading] = useState(true);
-    
+    const[isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const[isPlayerOpen, setIsPlayerOpen] = useState(false);
+
+    const toggleSidebar = () => {
+        setIsSidebarOpen(prev => !prev);
+    };
+
+    const closeSidebar = () => {
+    setIsSidebarOpen(false);
+    };
+
     const fetchRecommendedBooks = async () => {
         try {
             const response = await fetch('https://us-central1-summaristt.cloudfunctions.net/getBooks?status=recommended');
@@ -65,112 +76,120 @@ export default function ForYou() {
 
 
   return (
-    <div className={styles.container}>
-        <VerticalNavBar />
-        <NavBar />
-        <div className={styles.row}>
-            <section className={styles.section}> 
-                <h2 className={styles.sectionTitle}>Selected For You</h2>
-                {loading ? (
-                    <Skeleton width={620} height={230} borderRadius={2} />
-                ) : (
-                <Link href={`/book/${selectedBook?.id}`} className={styles.link}> 
-                    <div className={styles.selectedBook}>
-                        <p className={styles.selectedSubtitle}>{selectedBook?.subTitle}</p>
-                        <div className={styles.divider}></div>
-                        <img src={selectedBook?.imageLink} alt={selectedBook?.title} className={styles.selectedImage} />
-                        <div className={styles.selectedText}>
-                            <h3>{selectedBook?.title}</h3>
-                            <p>{selectedBook?.author}</p>
-                        </div>
-                    </div>
-                </Link>
-                )}
-            </section>
-
-            <section className={styles.section}>
-                <h2 className={styles.sectionTitle}>Recommended For You</h2>
-                <p className={styles.subtitle}>We think you'll like these</p>
-
-                 {loading ? (
-                    <div className={styles.bookGrid}>
-                        {[1, 2, 3, 4].map((index) => (
-                        <div key={index} className={styles.bookItem}>
-                                <Skeleton width={172} height={200} borderRadius={2} />
-                                <Skeleton width={172} height={16} borderRadius={2} />
-                                <Skeleton width={155} height={16} borderRadius={2} />
-                                <Skeleton width={172} height={16} borderRadius={2} />
-                        </div>
-                         ))}
-                    </div>             
-                 )
-                 
-                 :(
-                    
-                    
-                <div className={styles.bookGrid}>
-                    {recommendedBooks.map((book: any) => (
-                        <Link href={`/book/${book.id}`} key={book.id} className={styles.link}>
-                            <div className={styles.bookItem}>
-                                <img src={book.imageLink} alt={book.title} />
-                                <h3>{book.title}</h3>
-                                <p>{book.author}</p>
-                                <p className={styles.book__subtitle}>{book.subTitle}</p>
-                                <div className={styles.rating}>
-                                    <FontAwesomeIcon icon={faClock} className={styles.icon} />
-                                    <p>04:54</p>
-                                    <FontAwesomeIcon icon={faStar} className={styles.icon} />
-                                    <p>{book.averageRating}</p>
+    <div className={styles.layout}>
+        <div className={styles.container}>
+            <VerticalNavBar isOpen={isSidebarOpen} closeSidebar={closeSidebar} isPlayerOpen={isPlayerOpen} />
+            <div className={styles.main}>
+                <NavBar  isOpen={isSidebarOpen} toggleSidebar={toggleSidebar}/>
+                <div className={styles.row}>
+                    <section className={styles.sectionSelectedForYou}> 
+                        <h2 className={styles.sectionTitle}>Selected For You</h2>
+                        {loading ? (
+                            <Skeleton width={620} height={230} borderRadius={2} />
+                        ) : (
+                        <Link href={`/book/${selectedBook?.id}`} className={styles.link}> 
+                            <div className={styles.selectedBook}>
+                                <p className={styles.selectedSubtitle}>{selectedBook?.subTitle}</p>
+                                <div className={styles.divider}></div>
+                                
+                                <div className={styles.selectedContent}>
+                                    <img src={selectedBook?.imageLink} alt={selectedBook?.title} className={styles.selectedImage} />
+                                    <div className={styles.selectedText}>
+                                        <h3>{selectedBook?.title}</h3>
+                                        <p>{selectedBook?.author}</p>
+                                    </div>
                                 </div>
                             </div>
                         </Link>
-                    ))}
-                </div>
-                   
-                )}
-            </section>
+                        )}
+                    </section>
 
-            <section className={styles.section}>
-                <h2 className={styles.sectionTitle}>Suggested Books</h2>
-                <p className={styles.subtitle}>Browse those books</p>
-                
-                {loading ? (
-                    <div className={styles.bookGrid}>
-                        {[1, 2, 3, 4].map((index) => (
-                            <div key={index} className={styles.bookItem}>
-                                <Skeleton width={172} height={200} borderRadius={2} />
-                                <Skeleton width={172} height={16} borderRadius={2} />
-                                <Skeleton width={155} height={16} borderRadius={2} />
-                                <Skeleton width={172} height={16} borderRadius={2} />
-                        </div>
-                        ))}
-                    </div>
-                ) : (
-                    
-                    <div className={styles.bookGrid}>
-                        {suggestedBooks.map((book: any) => (
-                            <Link href={`/book/${book.id}`}  key={book.id}>
-                                <div className={styles.bookItem}>
-                                    <img src={book.imageLink} alt={book.title} />
-                                    <h3>{book.title}</h3>
-                                    <p>{book.author}</p>
-                                    <p className={styles.book__subtitle}>{book.subTitle}</p>
-                                    <div className={styles.rating}>
-                                        <FontAwesomeIcon icon={faClock} className={styles.icon} />
-                                        <p>04:54</p>
-                                        <FontAwesomeIcon icon={faStar} className={styles.icon} />
-                                        <p>{book.averageRating}</p>
-                                    </div>
+                    <section className={styles.section}>
+                        <h2 className={styles.sectionTitle}>Recommended For You</h2>
+                        <p className={styles.subtitle}>We think you'll like these</p>
+
+                        {loading ? (
+                            <div className={styles.bookGrid}>
+                                {[1, 2, 3, 4].map((index) => (
+                                <div key={index} className={styles.bookItem}>
+                                        <Skeleton width={172} height={200} borderRadius={2} />
+                                        <Skeleton width={172} height={16} borderRadius={2} />
+                                        <Skeleton width={155} height={16} borderRadius={2} />
+                                        <Skeleton width={172} height={16} borderRadius={2} />
                                 </div>
-                            </Link>
-                        ))}
-                    </div>
-                )}
-                
-            </section>
-        </div>
-       
-    </div>
+                                ))}
+                            </div>             
+                        )                 
+                        :(
+                            
+                        <div className={styles.bookGrid}>
+                            {recommendedBooks.map((book: any) => (
+                                <Link href={`/book/${book.id}`} key={book.id} className={styles.link}>
+                                    <div className={styles.bookItem}>
+                                        {book.subscriptionRequired && (
+                                            <button className={styles.subscriptionBtn}>Premium</button>
+                                        )}
+                                        <img src={book.imageLink} alt={book.title} />
+                                        <h3>{book.title}</h3>
+                                        <p>{book.author}</p>
+                                        <p className={styles.book__subtitle}>{book.subTitle}</p>
+                                        <div className={styles.rating}>
+                                            <FontAwesomeIcon icon={faClock} className={styles.icon} />
+                                            <p>04:54</p>
+                                            <FontAwesomeIcon icon={faStar} className={styles.icon} />
+                                            <p>{book.averageRating}</p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>                 
+                        )}
+                    </section>
 
+                    <section className={styles.section}>
+                        <h2 className={styles.sectionTitle}>Suggested Books</h2>
+                        <p className={styles.subtitle}>Browse those books</p>
+                        
+                        {loading ? (
+                            <div className={styles.bookGrid}>
+                                {[1, 2, 3, 4].map((index) => (
+                                    <div key={index} className={styles.bookItem}>
+                                        <Skeleton width={172} height={200} borderRadius={2} />
+                                        <Skeleton width={172} height={16} borderRadius={2} />
+                                        <Skeleton width={155} height={16} borderRadius={2} />
+                                        <Skeleton width={172} height={16} borderRadius={2} />
+                                </div>
+                                ))}
+                            </div>
+                        ) : (
+                            
+                            <div className={styles.bookGrid}>
+                                {suggestedBooks.map((book: any) => (
+                                    <Link href={`/book/${book.id}`}  key={book.id}>
+                                        <div className={styles.bookItem}>
+                                            {book.subscriptionRequired && (
+                                                <button className={styles.subscriptionBtn}>Premium</button>
+                                            )}
+                                            <img src={book.imageLink} alt={book.title} />
+                                            <h3>{book.title}</h3>
+                                            <p>{book.author}</p>
+                                            <p className={styles.book__subtitle}>{book.subTitle}</p>
+                                            <div className={styles.rating}>
+                                                <FontAwesomeIcon icon={faClock} className={styles.icon} />
+                                                <p>04:54</p>
+                                                <FontAwesomeIcon icon={faStar} className={styles.icon} />
+                                                <p>{book.averageRating}</p>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
+                        
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>               
   )
 }
