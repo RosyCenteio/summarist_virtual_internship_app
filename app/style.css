@@ -467,6 +467,7 @@ button:disabled {
 /* AUTHENTICATION MODAL */
 .auth{
   position: fixed;
+  inset: 0;
   top: 0;
   left: 0;
   width: 100%;
@@ -475,6 +476,8 @@ button:disabled {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 999999;
+
 }
 .auth__content {
   background-color: #fff;
@@ -483,6 +486,7 @@ button:disabled {
   width: 100%;
   max-width: 400px;
   position: relative;
+  z-index: 1000000;
 }
 
 

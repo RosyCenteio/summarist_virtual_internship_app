@@ -7,11 +7,13 @@ import { useAuth } from './../context/AuthContext';
 import Link from 'next/link';
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../lib/firebase"; 
+import Login from '../component/auth/login';
 export default function Settings() {
    const { user } = useAuth();
    const[isSidebarOpen, setIsSidebarOpen] = useState(false);
    const[isPlayerOpen, setIsPlayerOpen] = useState(false);
    const [plan, setPlan] = useState("");
+   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(prev => !prev);
@@ -51,18 +53,36 @@ export default function Settings() {
     <div className={styles.container}>
       <VerticalNavBar isOpen={isSidebarOpen} closeSidebar={closeSidebar} isPlayerOpen={isPlayerOpen}/>
       <NavBar  isOpen={isSidebarOpen} toggleSidebar={toggleSidebar}/>
-      <div className={styles.section}>
-        <h1 className={styles.settingsTitle}>Settings</h1>
-        <div className={styles.horizontallyDivider}></div>
-        <h2 className={styles.settingsSubTitle}>Your Subscription plan</h2>
-        <p>{plan}</p>
-        <Link href="/choose-plan">
-          <button className={styles.upgradeButton}>Upgrade to Premium</button>
-        </Link>
-        <div className={styles.horizontallyDivider}></div>
-        <h2 className={styles.settingsSubTitle}>Email</h2>
-        <p>{user?.email}</p>
+      {user ? (
+        <div className={styles.section}>
+          <h1 className={styles.settingsTitle}>Settings</h1>
+          <div className={styles.horizontallyDivider}></div>
+          <h2 className={styles.settingsSubTitle}>Your Subscription plan</h2>
+          <p>{plan}</p>
+          <Link href="/choose-plan">
+            <button className={styles.upgradeButton}>Upgrade to Premium</button>
+          </Link>
+          <div className={styles.horizontallyDivider}></div>
+          <h2 className={styles.settingsSubTitle}>Email</h2>
+          <p>{user?.email}</p>
       </div>
+
+      ):(
+        <div className={styles.section}>
+          <h1 className={styles.settingsTitle}>Settings</h1>
+          <div className={styles.horizontallyDivider}></div>
+          <div className={styles.settingsLocked}>
+            <img src="/login.png" alt="settings locked" className={styles.settingsLockedImage} />
+            <p className={styles.loginToAccess}>Log in to your account to see your details.</p>
+            <button className={styles.upgradeButton} onClick={() => setIsModalOpen(true)}>Login</button>
+           </div>
+          <Login 
+              isOpen={isModalOpen} 
+              onClose={() => setIsModalOpen(false)} 
+          />
+        </div>
+        
+      )}
     </div>
   )
 }

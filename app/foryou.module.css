@@ -240,6 +240,16 @@
 
 .selectedText {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    
+}
+
+.playBook{
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .selectedText h3 {
@@ -253,6 +263,25 @@
     color: #666;
     margin: 4px 0 0 0;
 }
+.listenLink{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.playerIcon{
+    background-color: #000;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    border-radius: 50%;
+    align-items: center;
+    padding: 4px 4px 4px 6px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+}
 
 .bookGrid {
     display: flex;
@@ -260,6 +289,8 @@
     gap: 30px;
     overflow-x: auto;
     margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
 }
 
 .bookGrid::-webkit-scrollbar {
@@ -271,8 +302,8 @@
   width: 172px;
   text-align: center;
   transition: transform 0.3s ease;
-  z-index: 1;
   padding-top: 30px;
+  z-index: 1;
 }
 
 .bookItem::before {
@@ -293,9 +324,7 @@
   opacity: 1;
 }
 
-.bookItem:hover {
-  transform: translateY(15px);
-}
+
 
 .bookItem img {
     width: 100%;
@@ -641,6 +670,28 @@
   border-bottom: 3px solid #2bd97c;
 }
 
+.settingsLocked{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  
+}
+
+.settingsLockedImage{
+  width: 460px;
+  height: auto;
+  margin: 20px auto;
+}
+
+.loginToAccess{
+  font-size: 24px;
+  font-weight: 700;
+  color: #032b41;
+  margin-bottom: 16px;
+  text-align: center;
+}
 
 
 @media(max-width:1000px){

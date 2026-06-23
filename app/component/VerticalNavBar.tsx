@@ -1,5 +1,7 @@
-import React from 'react'
+'use client';
+import React, { useState } from 'react'
 import styles from '../foryou.module.css'
+import "../style.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from 'next/link';
 import {
@@ -11,6 +13,11 @@ import {
   faCircleQuestion,
   faRightFromBracket
 } from "@fortawesome/free-solid-svg-icons";
+import { signOut } from "firebase/auth";
+import { auth } from "../lib/firebase";
+import { useRouter } from "next/navigation";
+import { useAuth } from './../context/AuthContext';
+import Login from './auth/login';
 
 interface Props {
   isOpen: boolean;
@@ -19,7 +26,24 @@ interface Props {
   setFontSize: (size: string) => void;
 }
 
+
+
+
 export default function VerticalNavBar({ isOpen, closeSidebar, isPlayerOpen , setFontSize}: Props) {
+  const router = useRouter();
+  const { user } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push("/for-you");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
+
+
   return (
     <div className={`${styles.sidebar} ${isOpen ? styles.open : ""}`} >
         <img src="/logo.png" alt="Logo" className={styles.logo} />
@@ -51,12 +75,23 @@ export default function VerticalNavBar({ isOpen, closeSidebar, isPlayerOpen , se
         )}
         </nav>
         <div className={styles.bottomNav}>
-        <Link href="/settings" className={styles.navItem} onClick={closeSidebar}>
-            <FontAwesomeIcon icon={faGear} /> Settings</Link>
-        <Link href="" className={styles.navItem + ' ' + styles.cursorNotAllowed} onClick={closeSidebar}>
-            <FontAwesomeIcon icon={faCircleQuestion} /> Help & Support</Link>
-        <Link href="/logout" className={styles.navItem} onClick={closeSidebar}>
-            <FontAwesomeIcon icon={faRightFromBracket} /> Logout</Link>
+          <Link href="/settings" className={styles.navItem} onClick={closeSidebar}>
+              <FontAwesomeIcon icon={faGear} /> Settings</Link>
+          <Link href="" className={styles.navItem + ' ' + styles.cursorNotAllowed} onClick={closeSidebar}>
+              <FontAwesomeIcon icon={faCircleQuestion} /> Help & Support</Link>
+          
+          {user ? (
+            <button className={styles.navItem + ' ' + styles.cursorPointer} onClick={handleLogout}>
+              <FontAwesomeIcon icon={faRightFromBracket} /> Logout</button>
+          ) : (
+            <button className={styles.navItem + ' ' + styles.cursorPointer} onClick={() => setIsModalOpen(true)}>
+              <FontAwesomeIcon icon={faRightFromBracket} /> Login</button>
+          )}
+
+          <Login 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+          />
         </div>
     </div>
   )
