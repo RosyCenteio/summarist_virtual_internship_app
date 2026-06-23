@@ -23,7 +23,7 @@ interface Props {
   isOpen: boolean;
   closeSidebar: () => void;
   isPlayerOpen: boolean;
-  setFontSize: (size: string) => void;
+  setFontSize?: (size: string) => void;
 }
 
 
@@ -59,16 +59,16 @@ export default function VerticalNavBar({ isOpen, closeSidebar, isPlayerOpen , se
         
         {isPlayerOpen && (
           <div className={styles.fontSize}>
-              <button style={{ fontSize: '16px' }} className={styles.underline} onClick={() => setFontSize("small")}>
+              <button style={{ fontSize: '16px' }} className={styles.underline} onClick={() => setFontSize?.("small")}>
                 Aa
               </button>
-              <button style={{ fontSize: '18px' }} className={styles.underline}  onClick={() => setFontSize("medium")}>
+              <button style={{ fontSize: '18px' }} className={styles.underline}  onClick={() => setFontSize?.("medium")}>
                 Aa
               </button>
-              <button style={{ fontSize: '22px' }} className={styles.underline} onClick={() => setFontSize("large")}>
+              <button style={{ fontSize: '22px' }} className={styles.underline} onClick={() => setFontSize?.("large")}>
                 Aa
               </button>
-              <button style={{ fontSize: '26px' }} className={styles.underline} onClick={() => setFontSize("x-large")}>
+              <button style={{ fontSize: '26px' }} className={styles.underline} onClick={() => setFontSize?.("x-large")}>
                 Aa
               </button>
           </div>
