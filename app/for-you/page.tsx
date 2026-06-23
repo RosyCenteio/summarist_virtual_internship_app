@@ -27,7 +27,7 @@ export default function ForYou() {
 
     const toggleSidebar = () => {
         setIsSidebarOpen(prev => !prev);
-    };  
+    };
 
     const closeSidebar = () => {
     setIsSidebarOpen(false);
@@ -89,7 +89,7 @@ export default function ForYou() {
                         {loading ? (
                             <Skeleton width={620} height={230} borderRadius={2} />
                         ) : (
-                        <Link href={`/book/${selectedBook?.id}`} className={styles.link}> 
+                        <Link href={`/book/${selectedBook?.id}`}> 
                             <div className={styles.selectedBook}>
                                 <p className={styles.selectedSubtitle}>{selectedBook?.subTitle}</p>
                                 <div className={styles.divider}></div>
@@ -132,7 +132,7 @@ export default function ForYou() {
                             
                         <div className={styles.bookGrid}>
                             {recommendedBooks.map((book: any) => (
-                                <Link href={`/book/${book.id}`} key={book.id}>
+                                <Link href={`/book/${book.id}`} key={book.id} className={styles.link}>
                                     <div className={styles.bookItem}>
                                         {book.subscriptionRequired && (
                                             <button className={styles.subscriptionBtn}>Premium</button>
