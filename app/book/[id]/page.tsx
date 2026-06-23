@@ -10,14 +10,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faMicrophone, faLightbulb, faBookOpen, faBookmark } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import Skeleton from '@/app/component/ui/Skeleton';
+import { useAuth } from '../../context/AuthContext';
+import Login from '@/app/component/auth/login';
+
+
 
 export default function BookDetails() {
   const id = useParams().id;
-
   const [book, setBook] = useState<Book | null>(null);
   const[loading, setLoading] = useState(true);
   const[isSidebarOpen, setIsSidebarOpen] = useState(false);
   const[isPlayerOpen, setIsPlayerOpen] = useState(false);
+  const { user } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   const toggleSidebar = () => {
       setIsSidebarOpen(prev => !prev);
@@ -83,17 +88,33 @@ export default function BookDetails() {
                   <p>{book?.keyIdeas}</p>  
               </div>
               <div className={styles.horizontallyDivider}></div>
-              <div className={styles.btn}>
-                  <Link href={`/player/${book?.id}`}>
-                    <button className={styles.startBtn}>
-                      <FontAwesomeIcon icon={faBookOpen} className={styles.icon} />   Read</button>
-                  </Link>
+             
+             {user ? (
+                 <div className={styles.btn}>
+                    <Link href={`/player/${book?.id}`}>
+                      <button className={styles.startBtn}>
+                        <FontAwesomeIcon icon={faBookOpen} className={styles.icon} />   Read</button>
+                    </Link>
 
-                  <Link href={`/player/${book?.id}`}>
-                    <button className={styles.startBtn}>
-                      <FontAwesomeIcon icon={faMicrophone} className={styles.icon} />  Listen</button>  
-                  </Link>
-              </div>
+                    <Link href={`/player/${book?.id}`}>
+                      <button className={styles.startBtn}>
+                        <FontAwesomeIcon icon={faMicrophone} className={styles.icon} />  Listen</button>  
+                    </Link>
+                 </div>
+             ):(
+                <div className={styles.btn}>
+                    <button className={styles.startBtn} onClick={() => setIsModalOpen(true)}>
+                      <FontAwesomeIcon icon={faBookOpen} className={styles.icon} />   Read</button>
+                      <button className={styles.startBtn} onClick={() => setIsModalOpen(true)}>
+                        <FontAwesomeIcon icon={faMicrophone} className={styles.icon} />  Listen</button>  
+                      <Login 
+                        isOpen={isModalOpen} 
+                        onClose={() => setIsModalOpen(false)} 
+                    />
+                 </div>
+                 
+             )}
+             
           </div>
           )}
 

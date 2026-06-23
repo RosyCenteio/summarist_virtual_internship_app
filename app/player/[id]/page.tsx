@@ -1,7 +1,7 @@
 'use client'
 import VerticalNavBar from '@/app/component/VerticalNavBar'
 import NavBar from '@/app/for-you/NavBar'
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from '../../foryou.module.css';
 import { useParams } from 'next/navigation';
 import { Book } from '@/app/component/ui/Book';
@@ -10,12 +10,12 @@ export default function player() {
 
    const id = useParams().id;
   
-    const [book, setBook] = React.useState<Book | null>(null);
-    const audioRef = React.useRef<HTMLAudioElement | null>(null);
-    const [isPlaying, setIsPlaying] = React.useState(false);
-    const [progress, setProgress] = React.useState(0);
-    const [currentTime, setCurrentTime] = React.useState(0);
-    const [duration, setDuration] = React.useState(0);
+    const [book, setBook] = useState<Book | null>(null);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [progress, setProgress] = useState(0);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState(0);
     const[isSidebarOpen, setIsSidebarOpen] = useState(false);
     const[isPlayerOpen, setIsPlayerOpen] = useState(true);
     const [fontSize, setFontSize] = useState("medium");
@@ -65,36 +65,49 @@ export default function player() {
       return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
     };
   
-    React.useEffect(() => {
+    useEffect(() => {
       const fetchBookDetails = async () => {
         try {
-          const response = await fetch(`https://us-central1-summaristt.cloudfunctions.net/getBook?id=${id}`);
+          const response = await fetch(
+            `https://us-central1-summaristt.cloudfunctions.net/getBook?id=${id}`
+          );
           const data = await response.json();
           setBook(data);
         } catch (error) {
-          console.error('Error fetching book details:', error);
+          console.error("Error fetching book details:", error);
         }
-      }
-      fetchBookDetails();
+      };
 
+      fetchBookDetails();
+    }, [id]);
+
+    useEffect(() => {
       const audio = audioRef.current;
-      if (!audio) return;
+      if (!audio || !book?.audioLink) return;
+
+      const setAudioDuration = () => {
+        setDuration(audio.duration);
+      };
 
       const update = () => {
         setCurrentTime(audio.currentTime);
-        setDuration(audio.duration);
 
-        const percent =
-          (audio.currentTime / audio.duration) * 100;
+        const percent = (audio.currentTime / audio.duration) * 100;
         setProgress(percent || 0);
       };
 
+      audio.addEventListener("loadedmetadata", setAudioDuration);
       audio.addEventListener("timeupdate", update);
 
+      audio.load();
+
       return () => {
+        audio.removeEventListener("loadedmetadata", setAudioDuration);
         audio.removeEventListener("timeupdate", update);
       };
-    }, []);
+    }, [book?.audioLink]);
+
+
   return (
     <div>
         <VerticalNavBar isOpen={isSidebarOpen} closeSidebar={closeSidebar} isPlayerOpen={isPlayerOpen}  setFontSize={setFontSize}/>
@@ -149,6 +162,7 @@ export default function player() {
             <audio
               ref={audioRef}
               src={book?.audioLink || "/audio/sample.mp3"}
+              preload="metadata"
             />
           </div>
         </div>

@@ -9,10 +9,11 @@ import NavBar from './NavBar';
 import {
   faStar,
   faClock,
-  faBars
+  faPlay
 } from "@fortawesome/free-solid-svg-icons";
 import Link from 'next/link';
 import {Book} from '../component/ui/Book'
+import AudioDuration from '../component/AudioDuration';
 
 
 export default function ForYou() {
@@ -22,10 +23,11 @@ export default function ForYou() {
     const[loading, setLoading] = useState(true);
     const[isSidebarOpen, setIsSidebarOpen] = useState(false);
     const[isPlayerOpen, setIsPlayerOpen] = useState(false);
+    const[isFormatDuration, setIsFormatDuration] = useState(true);
 
     const toggleSidebar = () => {
         setIsSidebarOpen(prev => !prev);
-    };
+    };  
 
     const closeSidebar = () => {
     setIsSidebarOpen(false);
@@ -97,6 +99,12 @@ export default function ForYou() {
                                     <div className={styles.selectedText}>
                                         <h3>{selectedBook?.title}</h3>
                                         <p>{selectedBook?.author}</p>
+                                        <div className={styles.playBook}>
+                                            <FontAwesomeIcon icon={faPlay} className={styles.playerIcon} />
+                                            {selectedBook && 
+                                                <AudioDuration audioLink={selectedBook?.audioLink}  isFormatDuration={isFormatDuration}/>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -124,7 +132,7 @@ export default function ForYou() {
                             
                         <div className={styles.bookGrid}>
                             {recommendedBooks.map((book: any) => (
-                                <Link href={`/book/${book.id}`} key={book.id} className={styles.link}>
+                                <Link href={`/book/${book.id}`} key={book.id}>
                                     <div className={styles.bookItem}>
                                         {book.subscriptionRequired && (
                                             <button className={styles.subscriptionBtn}>Premium</button>
@@ -135,7 +143,7 @@ export default function ForYou() {
                                         <p className={styles.book__subtitle}>{book.subTitle}</p>
                                         <div className={styles.rating}>
                                             <FontAwesomeIcon icon={faClock} className={styles.icon} />
-                                            <p>04:54</p>
+                                            <AudioDuration audioLink={book.audioLink} />
                                             <FontAwesomeIcon icon={faStar} className={styles.icon} />
                                             <p>{book.averageRating}</p>
                                         </div>
@@ -176,7 +184,7 @@ export default function ForYou() {
                                             <p className={styles.book__subtitle}>{book.subTitle}</p>
                                             <div className={styles.rating}>
                                                 <FontAwesomeIcon icon={faClock} className={styles.icon} />
-                                                <p>04:54</p>
+                                                <AudioDuration audioLink={book.audioLink} />
                                                 <FontAwesomeIcon icon={faStar} className={styles.icon} />
                                                 <p>{book.averageRating}</p>
                                             </div>
