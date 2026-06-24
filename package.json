@@ -2,8 +2,8 @@
   "name": "summarist_virtual_internship_app",
   "version": "0.1.0",
   "engines": {
-  "node": "20.x"
-},
+    "node": "20.x"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -16,12 +16,12 @@
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "@fortawesome/react-fontawesome": "^3.3.0",
     "firebase": "^12.12.0",
-    "firebase-admin": "^13.8.0",
+    "firebase-admin": "^13.10.0",
     "next": "16.2.3",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-icons": "^5.6.0",
-    "stripe": "^22.1.0"
+    "stripe": "^22.2.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
