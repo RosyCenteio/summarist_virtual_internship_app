@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import styles from '../chooseplan.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile, faSeedling, faHandshake } from '@fortawesome/free-solid-svg-icons';
+import { auth } from '../lib/firebase';
 
 
 export default function ChoosePlan() {
@@ -34,6 +35,36 @@ export default function ChoosePlan() {
 
     const toggle = (index: number) => {
         setOpenIndex(openIndex === index ? -1 : index);
+    };
+
+
+    const handleCheckout = async (plan: "monthly" | "yearly") => {
+    const user = auth.currentUser;
+
+    if (!user) {
+      alert("Please login first");
+      return;
+    }
+
+    const response = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        uid: user.uid,
+        email: user.email,
+        plan,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert("Something went wrong");
+    }
     };
         
     return (
@@ -105,14 +136,14 @@ export default function ChoosePlan() {
         <div className={styles.ctaWrapper}>
             {selected === 'yearly'? (
                 <>
-                    <button className={styles.ctaBtn}>
+                    <button className={styles.ctaBtn} onClick={() => handleCheckout("yearly")}>
                     Start your free 7-day trial
                     </button>
                     <p className={styles.planNote}>Cancel your trial at any time before it ends, and you won’t be charged.</p>
                 </>   
             ):(
                <>
-                    <button className={styles.ctaBtn}>
+                    <button className={styles.ctaBtn} onClick={() => handleCheckout("monthly")}>
                     Start your first month
                     </button>
                     <p className={styles.planNote}>30-day money back guarantee, no questions asked.</p>
