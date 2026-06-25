@@ -58,7 +58,7 @@ export async function POST(req: Request) {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings?payment=success`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/choose-plan`,
       metadata: {
         firebaseUID: uid,
