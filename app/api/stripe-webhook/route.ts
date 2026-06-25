@@ -58,6 +58,7 @@ export async function POST(req: Request) {
       subscription.status === "trialing";
 
     if (uid) {
+      alert("Updating user subscription status in Firestore");
       await adminDb.collection("users").doc(uid).set(
         {
           plan: isActive ? plan : "free",
