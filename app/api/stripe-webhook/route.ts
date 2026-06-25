@@ -37,10 +37,6 @@ export async function POST(req: Request) {
       await adminDb.collection("users").doc(uid).set(
         {
           plan: plan === "yearly" ? "yearly" : "monthly",
-          isPremium: true,
-          subscriptionStatus: "active",
-          stripeCustomerId: session.customer,
-          stripeSubscriptionId: session.subscription,
         },
         { merge: true }
       );
@@ -67,8 +63,7 @@ export async function POST(req: Request) {
       await adminDb.collection("users").doc(uid).set(
         {
           plan: isActive ? plan : "free",
-          isPremium: isActive,
-          subscriptionStatus: subscription.status,
+          
         },
         { merge: true }
       );
