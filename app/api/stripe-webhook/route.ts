@@ -35,11 +35,13 @@ export async function POST(req: Request) {
 
     if (uid) {
       await adminDb.collection("users").doc(uid).set(
-        {
-          plan: plan === "yearly" ? "yearly" : "monthly",
-        },
-        { merge: true }
-      );
+      {
+        plan: plan === "yearly" ? "yearly premium" : "monthly premium",
+        isPremium: true,
+        subscriptionStatus: "active",
+      },
+      { merge: true }
+    );
     }
   }
 
@@ -59,7 +61,6 @@ export async function POST(req: Request) {
       subscription.status === "trialing";
 
     if (uid) {
-      alert("Updating user subscription status in Firestore");
       await adminDb.collection("users").doc(uid).set(
         {
           plan: isActive ? plan : "free",
