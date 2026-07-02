@@ -4,6 +4,8 @@ import { signInWithEmailAndPassword,createUserWithEmailAndPassword, sendPassword
 import { auth } from '../../lib/firebase';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+import { createPortal } from "react-dom";
+
 
 export default function Login({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
   const [email, setEmail] = useState('');
@@ -92,7 +94,7 @@ const handleResetPassword = async () => {
 };
 
 
-  return (
+  return createPortal (
     <div className="auth">
       <div className="auth__content">
         <button onClick={onClose} className='close__btn'>✕</button>
@@ -188,6 +190,7 @@ const handleResetPassword = async () => {
          </div>
         
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

@@ -1,4 +1,9 @@
 
+
+html {
+  scroll-behavior: smooth;
+}
+
 .mainLayout {
   display: flex;
 }
@@ -35,13 +40,22 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    margin-top: 8px;
+
+}
+
+.rating p{
+    margin-right: 16px;
+}
+
+.bold{
+    font-weight: bold;
 }
 .icon {
     color: #fff;
     font-size: 14px;
-    stroke: #7a7e7f;
+    stroke:#032b41;
     stroke-width: 30;
+    font-weight: bold;
 }
 
 .menuBtn {
@@ -198,9 +212,16 @@
 }
 
 .subtitle {
-    font-size: 16px;
-    color: #555;
-    margin-bottom: 16px;
+    font-size: 20px;
+    color: #032b41;
+    margin-bottom: 8px;
+    font-weight: 300;
+}
+
+.author{
+  color: #032b41;
+  margin-bottom: 16px;
+  font-weight: 600;
 }
 
 .selectedBook {
@@ -343,6 +364,7 @@
     font-size: 14px;
     color: #666;
     text-align: left;
+    margin-right: 8px;
 }
 
 .bookItem .book__subtitle {
@@ -365,9 +387,10 @@
 
 .bookDetails {
   display: flex;
+  justify-content: space-between;
   margin: 0 auto;
   margin-top: 20px;
-  margin-left: 220px;
+  margin-left: 280px;
   gap: 10px;
   padding: 0 24px;
 }
@@ -378,9 +401,8 @@
   flex-direction: column;
   gap: 10px;
   margin-top: 20px;
-  max-width: 700px; 
-  
 }
+
 .bookImage{
     width: 300px;
     height: 300px;
@@ -390,12 +412,8 @@
 .bookTitle{
     color:#032b41;
     font-size: 32px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    max-width: 380px;
-    line-height: 1.2;
-    word-break: break-word;
-    
+    font-weight: 900;
+    word-break: break-word;    
 }
 .btn{
     display: flex;
@@ -412,7 +430,12 @@
     font-size: 16px;
     font-weight: 500;
     margin-top: 20px;
-    
+    width: 144px;
+    height: 48px;
+}
+
+.startBtn:hover{
+    opacity: 0.8;;
 }
 
 .bookDescription{
@@ -457,14 +480,12 @@
 }
 
 .contentDescription{
-  max-width: 700px;
   color: #032b41;
   margin-bottom: 16px;
   line-height: 1.5;
 }
 .summaryContent{
   margin: 0 auto;
-  max-width: 780px;
   margin-bottom: 100px;
 }
 

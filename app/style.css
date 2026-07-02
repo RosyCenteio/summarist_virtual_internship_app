@@ -476,8 +476,7 @@ button:disabled {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999999;
-
+  z-index: 2147483647;
 }
 .auth__content {
   background-color: #fff;
@@ -486,7 +485,7 @@ button:disabled {
   width: 100%;
   max-width: 400px;
   position: relative;
-  z-index: 1000000;
+  z-index: 2147483647;
 }
 
 

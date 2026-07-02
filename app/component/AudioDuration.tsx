@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-export default function AudioDuration({ audioLink, isFormatDuration }: { audioLink: string, isFormatDuration?: boolean }) {
+export default function AudioDuration({ audioLink, isFormatDuration }: { audioLink?: string, isFormatDuration?: boolean }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [duration, setDuration] = useState(0);
 
