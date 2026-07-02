@@ -12,6 +12,7 @@ import Link from 'next/link';
 import Skeleton from '@/app/component/ui/Skeleton';
 import { useAuth } from '../../context/AuthContext';
 import Login from '@/app/component/auth/login';
+import AudioDuration from '@/app/component/AudioDuration';
 
 
 
@@ -72,20 +73,20 @@ export default function BookDetails() {
           :(
             <div className={styles.bookDetailsContent}>
               <h1 className={styles.bookTitle}>{book?.title}</h1> 
-              <p>{book?.author}</p>
-              <p>{book?.subTitle}</p>
+              <p className={styles.author}>{book?.author}</p>
+              <p className={styles.subtitle}>{book?.subTitle}</p>
               <div className={styles.horizontallyDivider}></div>
-              <div className={styles.rating}>
+              <div className={styles.rating + ' ' + styles.bold}>
                   <FontAwesomeIcon icon={faStar} className={styles.icon} />
-                  <p>{book?.averageRating} ({book?.totalRating})</p>
+                  <p>{book?.averageRating} ({book?.totalRating} ratings)</p>
                   <FontAwesomeIcon icon={faClock} className={styles.icon} />
-                  <p>04:54</p>  
+                  <p><AudioDuration audioLink={book?.audioLink}/></p>  
               </div>
-              <div className={styles.rating}>
+              <div className={styles.rating + ' ' + styles.bold}>
                   <FontAwesomeIcon icon={faMicrophone} className={styles.icon} />
                   <p>Audio & Text</p>
                   <FontAwesomeIcon icon={faLightbulb} className={styles.icon} />
-                  <p>{book?.keyIdeas}</p>  
+                  <p>{book?.keyIdeas} Key ideas</p>  
               </div>
               <div className={styles.horizontallyDivider}></div>
              

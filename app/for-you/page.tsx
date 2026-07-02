@@ -143,7 +143,7 @@ export default function ForYou() {
                                         <p className={styles.book__subtitle}>{book.subTitle}</p>
                                         <div className={styles.rating}>
                                             <FontAwesomeIcon icon={faClock} className={styles.icon} />
-                                            <AudioDuration audioLink={book.audioLink} />
+                                            <p><AudioDuration audioLink={book.audioLink}  /></p>
                                             <FontAwesomeIcon icon={faStar} className={styles.icon} />
                                             <p>{book.averageRating}</p>
                                         </div>
@@ -184,7 +184,7 @@ export default function ForYou() {
                                             <p className={styles.book__subtitle}>{book.subTitle}</p>
                                             <div className={styles.rating}>
                                                 <FontAwesomeIcon icon={faClock} className={styles.icon} />
-                                                <AudioDuration audioLink={book.audioLink} />
+                                                <p><AudioDuration audioLink={book.audioLink}  /></p>
                                                 <FontAwesomeIcon icon={faStar} className={styles.icon} />
                                                 <p>{book.averageRating}</p>
                                             </div>

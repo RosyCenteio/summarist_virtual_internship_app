@@ -61,7 +61,6 @@
   border-top-right-radius: 50%;
   border-top-left-radius: 50%;
   border-style: none;
-  padding: 30px;
   margin-top:96px;
 }
 
@@ -314,20 +313,115 @@
 }
 
 @media (max-width: 768px) {
+
+  .hero {
+    border-bottom-right-radius: 0%;
+    border-bottom-left-radius: 0%;
+  }
+
+  .hero::before {
+    border-bottom-right-radius: 0%;
+    border-bottom-left-radius: 0%;   
+  }
+
+
+  .heroImage img {
+    width: 380px;
+    border-top-right-radius: 50%;
+    border-top-left-radius: 50%;
+    border-style: none;
+    padding: 30px;
+  }
+
+  .features .fontawesomeIcon{
+    width: 40px;
+    height: 40px;
+  }
+
+  .features .p .span{
+    font-size: 12px;
+  }
+
+  .heroContent h1 {
+    font-size: 36px;
+  }
+
+  .plans{
+    max-width:780px ;
+  }
+   .plan h1{
+    font-size: 20px;
+  }
+  .planCard{
+    width: 480px;
+    align-items: center;
+  }
+
+  .question {
+    font-size: 20px;
+  }
+
   .footerContainer {
     grid-template-columns: 1fr 1fr;
     gap: 30px;
   }
+
 }
 
 @media (max-width: 480px) {
-  .footerContainer {
-    grid-template-columns: 1fr;
-  }
-
+  
   .column {
     align-items: center;
     text-align: center;
+  }
+   .heroContent h1 {
+    font-size: 20px;
+  }
+
+  .hero{
+    border-bottom-right-radius: 0%;
+    border-bottom-left-radius: 0%;
+  }
+
+  .featuresWrapper{
+    display: flex;
+    flex-direction: column;
+  }
+
+ .plans{
+    max-width:300px ;
+  }
+
+  .plans h1{
+    font-size: 20px;
+  }
+  .planCard{
+    width: 300px;
+    align-items: center;
+  }
+
+  .planTitle{
+    font-size: 16px;
+  }
+
+  .planContent h2{
+    font-size: 16px;
+  }
+
+  .feature p {
+    font-size: 14px;
+  }
+
+  .ctaBtn {
+    width: 280px;
+  }
+
+  .question {
+    font-size: 16px;
+  }
+
+  .footerContainer {
+    grid-template-columns: 1fr;
   }
 }
 

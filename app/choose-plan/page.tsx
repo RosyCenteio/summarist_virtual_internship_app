@@ -102,7 +102,7 @@ export default function ChoosePlan() {
             </div>
         </section>
 
-        <section className={styles.plans}>
+        <section className={styles.plans} id="plans">
             <h1 className={styles.sectionTitle}>Choose the plan that fits you</h1>
             <label className={styles.planCard + (selected === 'yearly' ? ' ' + styles.active : '')}
                 onClick={() => setSelected("yearly")}>
@@ -112,7 +112,7 @@ export default function ChoosePlan() {
 
                 <div className={styles.planContent}>
                 <p className={styles.planTitle}>Premium Plus Yearly</p>
-                <h2>$99.99/year</h2>
+                <h2>$1.80/year</h2>
                 <span className={styles.planNote}>7-day free trial included</span>
                 </div>
             </label>
@@ -127,7 +127,7 @@ export default function ChoosePlan() {
                     readOnly/>
                 <div className={styles.planContent}>
                 <p className={styles.planTitle}>Premium Monthly</p>
-                <h2>$9.99/month</h2>
+                <h2>$1.00/month</h2>
                 <span className={styles.planNote + " " + styles.muted}>No trial included</span>
                 </div>
             </label>
