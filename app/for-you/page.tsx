@@ -14,6 +14,8 @@ import {
 import Link from 'next/link';
 import {Book} from '../component/ui/Book'
 import AudioDuration from '../component/AudioDuration';
+import { useAuth } from './../context/AuthContext';
+
 
 
 export default function ForYou() {
@@ -24,6 +26,9 @@ export default function ForYou() {
     const[isSidebarOpen, setIsSidebarOpen] = useState(false);
     const[isPlayerOpen, setIsPlayerOpen] = useState(false);
     const[isFormatDuration, setIsFormatDuration] = useState(true);
+
+    const { user } = useAuth();
+    
 
     const toggleSidebar = () => {
         setIsSidebarOpen(prev => !prev);
@@ -75,6 +80,7 @@ export default function ForYou() {
         };
         fetchAll();
     }, []);
+
 
 
   return (
@@ -134,7 +140,7 @@ export default function ForYou() {
                             {recommendedBooks.map((book: any) => (
                                 <Link href={`/book/${book.id}`} key={book.id} className={styles.link}>
                                     <div className={styles.bookItem}>
-                                        {book.subscriptionRequired && (
+                                        {book.subscriptionRequired && !(user?.email === "guest@gmail.com") && (
                                             <button className={styles.subscriptionBtn}>Premium</button>
                                         )}
                                         <img src={book.imageLink} alt={book.title} />
@@ -175,7 +181,7 @@ export default function ForYou() {
                                 {suggestedBooks.map((book: any) => (
                                     <Link href={`/book/${book.id}`}  key={book.id}>
                                         <div className={styles.bookItem}>
-                                            {book.subscriptionRequired && (
+                                            {book.subscriptionRequired && !(user?.email === "guest@gmail.com") && (
                                                 <button className={styles.subscriptionBtn}>Premium</button>
                                             )}
                                             <img src={book.imageLink} alt={book.title} />
