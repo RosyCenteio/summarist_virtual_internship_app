@@ -50,13 +50,16 @@ export default function Login({ isOpen, onClose }: { isOpen: boolean, onClose: (
     }
   };
 
-  const guestLogin = async () => {
-    try {
-      onClose();
-      router.push('/for-you');
-    } catch (error: any) {
-      console.error("Guest Login Error:", error.message);
-    }
+  const guestLogin = async (e: React.FormEvent) => {
+      e.preventDefault(); 
+      try {
+        await signInWithEmailAndPassword(auth, "guest@gmail.com", "guest123");
+        onClose();
+        router.push('/for-you');
+      } catch (error: any) {
+        alert(error.message);
+        setError(error.message);
+      }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {

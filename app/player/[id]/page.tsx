@@ -6,7 +6,7 @@ import styles from '../../foryou.module.css';
 import { useParams } from 'next/navigation';
 import { Book } from '@/app/component/ui/Book';
 
-export default function player() {
+export default function Player() {
 
    const id = useParams().id;
   

@@ -33,7 +33,8 @@ export default function Settings() {
       console.log(" data:  " + data);
       return data.plan;
     } else {
-      console.log("No user found");
+      setPlan("Basic");
+      return "Basic";
     }
   };
 
@@ -59,9 +60,11 @@ export default function Settings() {
           <div className={styles.horizontallyDivider}></div>
           <h2 className={styles.settingsSubTitle}>Your Subscription plan</h2>
           <p>{plan}</p>
-          <Link href="/choose-plan#plans">
-            <button className={styles.upgradeButton}>Upgrade to Premium</button>
-          </Link>
+          {(plan === "Basic") && (
+            <Link href="/choose-plan#plans">
+              <button className={styles.upgradeButton}>Upgrade to Premium</button>
+            </Link>
+          )}  
           <div className={styles.horizontallyDivider}></div>
           <h2 className={styles.settingsSubTitle}>Email</h2>
           <p>{user?.email}</p>

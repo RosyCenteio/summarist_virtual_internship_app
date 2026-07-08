@@ -13,6 +13,8 @@ import Skeleton from '@/app/component/ui/Skeleton';
 import { useAuth } from '../../context/AuthContext';
 import Login from '@/app/component/auth/login';
 import AudioDuration from '@/app/component/AudioDuration';
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../lib/firebase"; 
 
 
 
@@ -24,6 +26,7 @@ export default function BookDetails() {
   const[isPlayerOpen, setIsPlayerOpen] = useState(false);
   const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [plan, setPlan] = useState("");
   
   const toggleSidebar = () => {
       setIsSidebarOpen(prev => !prev);
@@ -48,6 +51,32 @@ export default function BookDetails() {
     }
     fetchBookDetails();
   }, [id]);
+
+  const getUserPlan = async (uid: string) => {
+      const docRef = doc(db, "users", uid);
+      const docSnap = await getDoc(docRef);
+      console.log("Document snapshot:", docSnap);
+  
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        console.log(" data:  " + data);
+        return data.plan;
+      } else {
+        setPlan("Basic");
+        return "Basic";
+      }
+    };
+  
+    useEffect(() => {
+    const fetchPlan = async () => {
+      if (!user) return;
+  
+      const userPlan = await getUserPlan(user.uid);
+      setPlan(userPlan);
+    };
+  
+    fetchPlan();
+  }, [user]);
   
   return (
     <div>
@@ -91,6 +120,8 @@ export default function BookDetails() {
               <div className={styles.horizontallyDivider}></div>
              
              {user ? (
+
+               plan === "premium"  || !(book?.subscriptionRequired) ? (
                  <div className={styles.btn}>
                     <Link href={`/player/${book?.id}`}>
                       <button className={styles.startBtn}>
@@ -102,6 +133,21 @@ export default function BookDetails() {
                         <FontAwesomeIcon icon={faMicrophone} className={styles.icon} />  Listen</button>  
                     </Link>
                  </div>
+              ) : (
+
+                 <div className={styles.btn}>
+                    <Link href={`/choose-plan#plans`}>
+                      <button className={styles.startBtn}>
+                        <FontAwesomeIcon icon={faBookOpen} className={styles.icon} />   Read</button>
+                    </Link>
+
+                    <Link href={`/choose-plan#plans`}>
+                      <button className={styles.startBtn}>
+                        <FontAwesomeIcon icon={faMicrophone} className={styles.icon} />  Listen</button>  
+                    </Link>
+                 </div>
+
+              )
              ):(
                 <div className={styles.btn}>
                     <button className={styles.startBtn} onClick={() => setIsModalOpen(true)}>
@@ -135,19 +181,6 @@ export default function BookDetails() {
         
         <div className={styles.bookDetails}>
           <div className={styles.bookDetailsContent}>
-
-            {loading ? (
-              <button className={styles.btnSaveBook}>
-                <Skeleton  width={300} height={50} borderRadius={2}></Skeleton>
-              </button>
-            ):(
-              <button className={styles.btnSaveBook}>
-                <FontAwesomeIcon icon={faBookmark} className={styles.icon + ' ' + styles.blue} />   
-                <p>Add title to My Library</p>
-              </button>
-            )}
-            
-            
             <div className={styles.secondTitle}>What's is about</div>
             
             {loading ? (

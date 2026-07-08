@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     if (uid) {
       await adminDb.collection("users").doc(uid).set(
       {
-        plan: plan === "yearly" ? "yearly premium" : "monthly premium",
+        plan: "premium",
         isPremium: true,
         subscriptionStatus: "active",
       },

@@ -50,7 +50,7 @@ export default function VerticalNavBar({ isOpen, closeSidebar, isPlayerOpen , se
         <nav className={styles.nav}>
         <Link href="/for-you" className={styles.navItem} onClick={closeSidebar}> 
             <FontAwesomeIcon icon={faHouse} />For You</Link>
-        <Link href="" className={styles.navItem}>
+        <Link href="" className={styles.navItem + ' ' + styles.cursorNotAllowed}>
             <FontAwesomeIcon icon={faBookOpen} />My Library</Link>
         <Link href="" className={styles.navItem + ' ' + styles.cursorNotAllowed}>
             <FontAwesomeIcon  icon={faPen} />Highlights</Link>
