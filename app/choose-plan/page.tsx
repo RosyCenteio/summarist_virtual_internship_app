@@ -36,35 +36,40 @@ export default function ChoosePlan() {
     const toggle = (index: number) => {
         setOpenIndex(openIndex === index ? -1 : index);
     };
+    const [isLoading, setIsLoading] = useState(false);
 
 
     const handleCheckout = async (plan: "monthly" | "yearly") => {
-    const user = auth.currentUser;
 
-    if (!user) {
-      alert("Please login first");
-      return;
-    }
+        setIsLoading(true);
+        const user = auth.currentUser;
 
-    const response = await fetch("/api/create-checkout-session", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        uid: user.uid,
-        email: user.email,
-        plan,
-      }),
-    });
+        if (!user) {
+        alert("Please login first");
+        setIsLoading(false);
+        return;
+        }
 
-    const data = await response.json();
+        const response = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            uid: user.uid,
+            email: user.email,
+            plan,
+        }),
+        });
 
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert("Something went wrong");
-    }
+        const data = await response.json();
+
+        if (data.url) {
+            window.location.href = data.url;
+        } else {
+            setIsLoading(false);
+            alert("Something went wrong");
+        }
     };
         
     return (
@@ -136,15 +141,29 @@ export default function ChoosePlan() {
         <div className={styles.ctaWrapper}>
             {selected === 'yearly'? (
                 <>
-                    <button className={styles.ctaBtn} onClick={() => handleCheckout("yearly")}>
-                    Start your free 7-day trial
+                    <button className={styles.ctaBtn} onClick={() => handleCheckout("yearly")} disabled={isLoading}>
+                    {isLoading ? (
+                        <>
+                        <span className={styles.spinner}></span>
+                        Redirecting...
+                        </>
+                    ) : (
+                        "Start your free 7-day trial"
+                    )}
                     </button>
                     <p className={styles.planNote}>Cancel your trial at any time before it ends, and you won’t be charged.</p>
                 </>   
             ):(
                <>
-                    <button className={styles.ctaBtn} onClick={() => handleCheckout("monthly")}>
-                    Start your first month
+                    <button className={styles.ctaBtn} onClick={() => handleCheckout("monthly")} disabled={isLoading}>
+                    {isLoading ? (
+                        <>
+                        <span className={styles.spinner}></span>
+                        Redirecting...
+                        </>
+                    ) : (
+                        "Start your first month"
+                    )}
                     </button>
                     <p className={styles.planNote}>30-day money back guarantee, no questions asked.</p>
                 </>  

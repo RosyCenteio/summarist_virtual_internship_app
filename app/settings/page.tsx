@@ -31,6 +31,11 @@ export default function Settings() {
     if (docSnap.exists()) {
       const data = docSnap.data();
       console.log(" data:  " + data);
+      
+      if (!data || data.plan === undefined) {
+        setPlan("Basic");
+        return "Basic";
+      }
       return data.plan;
     } else {
       setPlan("Basic");
