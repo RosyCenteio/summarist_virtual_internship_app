@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { stripe } from "./../../lib/stripe";
-import { adminDb } from "../../lib/firebaseAdmin";
+import { stripe } from "../../lib/stripe";
+import Stripe from "stripe";
 
 export async function POST(req: Request) {
   try {
@@ -13,24 +13,36 @@ export async function POST(req: Request) {
       );
     }
 
+    if (plan !== "monthly" && plan !== "yearly") {
+      return NextResponse.json(
+        { error: "Invalid subscription plan" },
+        { status: 400 }
+      );
+    }
+
     const priceId =
-      plan === "monthly"
-        ? process.env.STRIPE_MONTHLY_PRICE_ID
-        : process.env.STRIPE_YEARLY_PRICE_ID;
+      plan === "yearly"
+        ? process.env.STRIPE_YEARLY_PRICE_ID
+        : process.env.STRIPE_MONTHLY_PRICE_ID;
 
     if (!priceId) {
       return NextResponse.json(
-        { error: "Missing Stripe price ID" },
+        { error: `Missing Stripe price ID for ${plan} plan` },
         { status: 500 }
       );
     }
 
-    const userRef = adminDb.collection("users").doc(uid);
-    const userDoc = await userRef.get();
+    // Find or create the Stripe customer
+    const existingCustomers = await stripe.customers.list({
+      email,
+      limit: 1,
+    });
 
-    let stripeCustomerId = userDoc.data()?.stripeCustomerId;
+    let stripeCustomerId: string;
 
-    if (!stripeCustomerId) {
+    if (existingCustomers.data.length > 0) {
+      stripeCustomerId = existingCustomers.data[0].id;
+    } else {
       const customer = await stripe.customers.create({
         email,
         metadata: {
@@ -39,45 +51,53 @@ export async function POST(req: Request) {
       });
 
       stripeCustomerId = customer.id;
+    }
 
-      await userRef.set(
-        {
-          email,
-          stripeCustomerId,
+    // Build subscription_data separately
+    const subscriptionData: Stripe.Checkout.SessionCreateParams.SubscriptionData =
+      {
+        metadata: {
+          firebaseUID: uid,
+          plan,
         },
-        { merge: true }
-      );
+      };
+
+    // Only yearly gets the seven-day trial
+    if (plan === "yearly") {
+      subscriptionData.trial_period_days = 7;
     }
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       customer: stripeCustomerId,
+
       line_items: [
         {
           price: priceId,
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/choose-plan`,
+
       metadata: {
         firebaseUID: uid,
         plan,
       },
-      subscription_data: {
-        metadata: {
-          firebaseUID: uid,
-          plan,
-        },
-      },
+
+      subscription_data: subscriptionData,
+
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/choose-plan`,
     });
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
     console.error("Checkout error:", error);
-    return NextResponse.json(
-      { error: "Checkout failed" },
-      { status: 500 }
-    );
+
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Unable to create checkout session";
+
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

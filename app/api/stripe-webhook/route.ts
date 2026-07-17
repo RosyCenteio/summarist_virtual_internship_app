@@ -25,46 +25,56 @@ export async function POST(req: Request) {
   }
 
   console.log("Received Stripe event:", event.type);
+ 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
 
     const uid = session.metadata?.firebaseUID;
-    console.log("Checkout session completed for UID:", uid);
-    const plan = session.metadata?.plan;
-    console.log("Checkout session completed for plan:", plan);
 
     if (uid) {
       await adminDb.collection("users").doc(uid).set(
-      {
-        plan: "premium",
-        isPremium: true,
-        subscriptionStatus: "active",
-      },
-      { merge: true }
-    );
+        {
+          stripeCustomerId: session.customer,
+          stripeSubscriptionId: session.subscription,
+        },
+        { merge: true }
+      );
     }
   }
 
   if (
+    event.type === "customer.subscription.created" ||
     event.type === "customer.subscription.updated" ||
     event.type === "customer.subscription.deleted"
   ) {
     const subscription = event.data.object as Stripe.Subscription;
 
     const uid = subscription.metadata?.firebaseUID;
-    console.log("Subscription event received for UID:", uid);
     const plan = subscription.metadata?.plan;
-    console.log("Subscription event received for plan:", plan);
 
-    const isActive =
+    console.log("Subscription event:", {
+      eventType: event.type,
+      uid,
+      plan,
+      status: subscription.status,
+    });
+
+    const hasPremiumAccess =
       subscription.status === "active" ||
       subscription.status === "trialing";
+
+    const planName =
+      plan === "yearly" || plan === "monthly"
+        ? "premium"
+        : "basic";
 
     if (uid) {
       await adminDb.collection("users").doc(uid).set(
         {
-          plan: isActive ? plan : "free",
-          
+          plan: hasPremiumAccess ? planName : "basic",
+          isPremium: hasPremiumAccess,
+          subscriptionStatus: subscription.status,
+          stripeSubscriptionId: subscription.id,
         },
         { merge: true }
       );
